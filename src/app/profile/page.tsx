@@ -10,10 +10,7 @@ const supabase = createBrowserClient(
 
 async function signInWithGithub(){
   const {error} = await supabase.auth.signInWithOAuth({
-    provider: 'github',
-    options:{
-        redirectTo:'/profile'
-    }
+    provider: 'github'
   })
   if (error){
     console.error(error)
@@ -43,19 +40,18 @@ export default function Home() {
     getSession()
   }, [])
 
-  console.log({user})
+  console.log(user?.identities[0].identity_data.full_name)
 
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-800">
       <div className="p-6 bg-white dark:bg-gray-700 rounded shadow-md">
-        <h1 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">GitHub Authentication</h1>
-        <button
-          onClick={signInWithGithub}
-          className="px-4 py-2 bg-black text-white rounded hover:bg-gray-700 dark:hover:bg-gray-600 mb-4"
-        >
-          Sign In with GitHub
-        </button>
+        <h1 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Your Profile</h1>
+        {user ? 
+        user?.identities[0].identity_data.full_name: 
+        'Signed Out'
+        }
+
         <button
           onClick={async () => {
             await signOut()
